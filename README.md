@@ -32,9 +32,12 @@ To set links: <code>--link ISSUE_ID:LINK_TYPE</code>, Example: <code>--link PRJ-
 As the name of fields you can use visible name or key(API) name. To check such information see section: Fields information
 
 ### Example of usage:<br />
-```./create_issue.py  --set project=PRJ --set issuetype="Task" --set components="Domain_X" --set summary="Categorize defects" --set assignee="Vladislav Gusak" --set Sprint=382 --set "Epic Link"=PRJ-15465" --set timetracking=4h```<br />
-<br />
-```./create_issue.py  --set project=PRJ --set issuetype="Feature" --set summary="[PoC] Some feature" --set assignee="Vladislav Gusak" --set labels=PoC_Mandatory_Feature --set labels=high_priority --link PRJ-236:"Is part of" --link PRJ-104:"FF-depends on" --set "IP Type"="Customer Specific IP"```<br />
+```
+./create_issue.py  --set project=PRJ --set issuetype="Task" --set components="Domain_X" --set summary="Categorize defects" --set assignee="Vladislav Gusak" --set Sprint=382 --set "Epic Link"=PRJ-15465" --set timetracking=4h
+```
+```
+./create_issue.py  --set project=PRJ --set issuetype="Feature" --set summary="[PoC] Some feature" --set assignee="Vladislav Gusak" --set labels=PoC_Mandatory_Feature --set labels=high_priority --link PRJ-236:"Is part of" --link PRJ-104:"FF-depends on" --set "IP Type"="Customer Specific IP"
+```
 
 ### Get fields information<br />
 General information:<br />
