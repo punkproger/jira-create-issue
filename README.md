@@ -1,5 +1,5 @@
 # Jira Create issue script
-## Agenda
+## Description
 create_issue.py script creates Jira issues from fields and links
 
 ## Install
