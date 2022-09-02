@@ -2,7 +2,8 @@
 # -*-encoding: utf-8-*-
 # Author: Vladislav Gusak
 #
-# Usage: ./create_issue.py  --set project=ONEINFO --set issuetype="Item Group" --set components="Domain_HUDControl" --set summary="OneInfo HUDControl domain" --set assignee="Vladislav Gusak" --link ONEINFO-110:"Is part of"
+# Usage: ./create_issue.py  --set project=PRJ --set issuetype="Task" --set components="Domain_X" --set summary="Categorize defects" --set assignee="Vladislav Gusak" --set Sprint=382 --set "Epic Link"=PRJ-15465" --set timetracking=4h
+# Usage: ./create_issue.py  --set project=PRJ --set issuetype="Feature" --set summary="[PoC] Some feature" --set assignee="Vladislav Gusak" --set labels=PoC_Mandatory_Feature --set labels=high_priority --link PRJ-236:"Is part of" --link PRJ-104:"FF-depends on" --set "IP Type"="Customer Specific IP"
 
 import argparse
 import json
