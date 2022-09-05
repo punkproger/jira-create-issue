@@ -107,6 +107,7 @@ class JiraFieldType(Enum):
     STRING = 1
     ENUM = 2
     TIME_TRACKING = 3
+    NUMBER = 4
 
 class JiraAllowedValueInformation:
     def __init__(self, information):
@@ -147,6 +148,8 @@ class JiraFieldInformation:
             return JiraFieldType.ARRAY
         elif type == "string":
             return JiraFieldType.STRING
+        elif type == "number":
+            return JiraFieldType.NUMBER
         elif "allowedValues" in self.information:
             return JiraFieldType.ENUM
         
@@ -162,6 +165,8 @@ class JiraFieldInformation:
             return JiraFieldType.ARRAY
         elif type == "string":
             return JiraFieldType.STRING
+        elif type == "number":
+            return JiraFieldType.NUMBER
         elif "allowedValues" in self.information:
             return JiraFieldType.ENUM
         
@@ -198,6 +203,9 @@ class Converter:
     def strs_to_int(self, values, field_information):
         return int(values[0])
     
+    def values_to_float(self, values, field_information):
+        return float(values[0])
+
     def values_to_timetracking(self, values, field_information):
         return {"originalEstimate": values[0]}
     
@@ -222,16 +230,16 @@ class Converter:
             return array
         else:
             return values
+    
+    def make_func_values_to_property(self, property_name):
+        return lambda values, field_information: {property_name: values[0]}
 
 
 def make_name_predicate(name):
     return lambda field_information: field_information.get_key() == name
 
-def make_array_predicate():
-    return lambda field_information: field_information.get_type() == JiraFieldType.ARRAY
-
-def make_enum_predicate():
-    return lambda field_information: field_information.get_type() == JiraFieldType.ENUM
+def make_type_predicate(type):
+    return lambda field_information: field_information.get_type() == type
 
 def make_predicates_and_convertors_list(converter):
     return [
@@ -240,8 +248,10 @@ def make_predicates_and_convertors_list(converter):
         {"predicate": make_name_predicate('assignee'),          "converter": converter.values_to_assignee},
         {"predicate": make_name_predicate('customfield_10113'), "converter": converter.strs_to_int},
         {"predicate": make_name_predicate('timetracking'),      "converter": converter.values_to_timetracking},
-        {"predicate": make_enum_predicate(),                    "converter": converter.values_to_enum},
-        {"predicate": make_array_predicate(),                   "converter": converter.values_to_array}
+        {"predicate": make_name_predicate('parent'),            "converter": converter.make_func_values_to_property("key")},
+        {"predicate": make_type_predicate(JiraFieldType.ENUM),  "converter": converter.values_to_enum},
+        {"predicate": make_type_predicate(JiraFieldType.ARRAY), "converter": converter.values_to_array},
+        {"predicate": make_type_predicate(JiraFieldType.NUMBER), "converter": converter.values_to_float}
     ]
 
 def get_issue_by_issuetype_and_project(jira, issuetype, project):
@@ -298,7 +308,7 @@ if __name__ == '__main__':
                 if "schema" in field:
                     fields_ids_map_all_data[field['id']]['schema'] = field['schema']
 
-            log.debug(json.dumps(fields_ids_map_all_data, indent=4, sort_keys=True))
+            print(json.dumps(fields_ids_map_all_data, indent=4, sort_keys=True))
             exit()
         else:
             issue = get_issue_by_issuetype_and_project(jira, args.issue_type, args.issue_project)
@@ -308,7 +318,7 @@ if __name__ == '__main__':
                 exit()
 
             allfields = jira.editmeta(issue)['fields']
-            log.debug(json.dumps(allfields, indent=4, sort_keys=True))
+            print(json.dumps(allfields, indent=4, sort_keys=True))
             exit()
 
     fields_and_values = parse_items_for_set(args.set)
@@ -346,14 +356,15 @@ if __name__ == '__main__':
                 break
             
         if predicate_found == False:
+            print("Not found predicate for {0}, information: ".format(field, field_information.get_raw()))
             final_fields[field] = values[0]
 
-    log.debug(json.dumps(final_fields, indent=4, sort_keys=True))
+    print(json.dumps(final_fields, indent=4, sort_keys=True))
     links = parse_items_for_link(args.link)
 
     try:
         issue = jira.create_issue(final_fields)
-        log.info("Successfully created a new issue: " + make_jira_issue_link(jira_login_info.server, issue.key))
+        print("Successfully created a new issue: " + make_jira_issue_link(jira_login_info.server, issue.key))
         link_issues(jira, issue, links)
     except Exception as e:
         log.error("Failed to create issue. Error: " + str(e))
