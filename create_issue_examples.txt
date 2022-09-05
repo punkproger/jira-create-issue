@@ -1,0 +1,8 @@
+Epic:
+./create_issue.py  --set project=PRJ --set issuetype="Epic" --set components="Domain_X" --set summary="FW Delivery Management Activities" --set "Epic Name"="FW Delivery Management Activities" --set "PERT O"=0 --set "PERT R/M"=0.25 --set "PERT P"=0.5 --set assignee="Vladislav Gusak" --set Sprint=381 --link PRJ-13091:"Is part of"
+
+Task:
+./create_issue.py  --set project=PRJ --set issuetype="Task" --set components="Domain_X" --set summary="FW Delivery Management Activities" --set assignee="Vladislav Gusak" --set Sprint=381 --set "Epic Link"PRJARCREATOR-36278 --set timetracking=4d
+
+Sub-task:
+./create_issue.py  --set project=PRJ --set issuetype="Sub-task" --set components="Domain_X" --set summary="FW Delivery Management Activities" --set assignee="Vladislav Gusak" --set "parent"=PRJ-37409 --set timetracking=4h
