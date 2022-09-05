@@ -203,6 +203,6 @@ def link_issues(jira, origin_issue, issues_and_links):
 
     for destination_issue, link_type in issues_and_links.items():
         try:
-            link_issue(jira, issue, jira.issue(destination_issue), link_type)
+            link_issue(jira, origin_issue, jira.issue(destination_issue), link_type)
         except Exception as e:
             log.error("Failed to link issue. Error: " + str(e))
